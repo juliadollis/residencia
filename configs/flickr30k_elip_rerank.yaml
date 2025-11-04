@@ -1,4 +1,0 @@
-baseline_out_dir: "/workspace/experiments/flickr30k_siglip_baseline"
-elip_ckpt_dir: "/workspace/experiments/flickr30k_siglip_eliplite/elip_ckpts"
-topk: 100
-device: "cuda"
