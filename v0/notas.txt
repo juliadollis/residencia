@@ -24,6 +24,10 @@ print("GPU:", torch.cuda.get_device_name(0))
 PY
 
 
+mkdir -p /workspace/{data,scripts,configs,experiments}
+
+
+
 ##RODAR
 python /workspace/scripts/01_baseline_siglip_faiss.py \
   --cfg /workspace/configs/flickr30k_siglip.yaml
