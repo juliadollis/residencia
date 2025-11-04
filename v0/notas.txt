@@ -1,0 +1,42 @@
+# Atualiza pacotes e instala libs básicas
+apt-get update && apt-get install -y git wget vim libgl1 libglib2.0-0
+
+# Atualiza pip e instala pacotes Python essenciais
+pip install --upgrade pip
+
+# PyTorch + libs do projeto
+pip install "transformers>=4.45" "accelerate>=1.0.0" datasets torchvision pillow timm einops tqdm safetensors
+
+# FAISS (para índice e re-ranking inicial)
+pip install "faiss-gpu-cu12==1.8.0.post3" || pip install "faiss-cpu==1.8.0"
+
+# open-clip (baseline CLIP)
+pip install open-clip-torch==2.24.0
+
+# utilitários
+pip install scikit-learn matplotlib ipykernel wandb
+
+# Verificação da GPU
+python - <<'PY'
+import torch
+print("CUDA disponível:", torch.cuda.is_available())
+print("GPU:", torch.cuda.get_device_name(0))
+PY
+
+
+##RODAR
+python /workspace/scripts/01_baseline_siglip_faiss.py \
+  --cfg /workspace/configs/flickr30k_siglip.yaml
+
+
+Esse script:
+	•	baixa nlphuji/flickr30k,
+	•	extrai embeddings com google/siglip-base-patch16-224 (congelado),
+	•	salva img_feats_train.npy, img_feats_test.npy, text_feats_test.npy,
+	•	constrói índice FAISS para o split de test e reporta Recall@1/5/10 (baseline).
+
+TREINO
+python /workspace/scripts/02_train_elip.py --cfg /workspace/configs/flickr30k_elip_train.yaml
+
+Re-ranking com o checkpoint “best.pt”:
+python /workspace/scripts/03_rerank_elip.py --cfg /workspace/configs/flickr30k_elip_rerank.yaml
