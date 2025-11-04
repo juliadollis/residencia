@@ -1,0 +1,11 @@
+baseline_out_dir: "/workspace/experiments/flickr30k_expanded_siglip_baseline"
+elip_ckpt_dir: "/workspace/experiments/flickr30k_expanded_elip_full/elip_full_ckpts"
+
+dataset_id: "nlphuji/flickr30k"
+dataset_name: "TEST"
+image_column: "image"
+text_column: "text"
+caption_is_list: false
+
+topk: 200
+device: "cuda"

@@ -1,0 +1,8 @@
+local_dataset_dir: "/workspace/data/flickr30k_expanded"
+image_column: "image"
+text_column: "text"
+model_name: "google/siglip-base-patch16-224"
+batch_size: 64
+num_workers: 4
+device: "cuda"
+out_dir: "/workspace/experiments/flickr30k_expanded_siglip_baseline"
