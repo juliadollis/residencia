@@ -1,0 +1,25 @@
+coco-captions
+
+(main) root@C.27566524:/$ python workspace/v1/infer_and_eval.py   --root workspace/v1   --data_rel data/COCOValMini   --model google/siglip-base-patch16-224   --ckpt_rel ckpt_coco_valmini/best.pt   --split validation   --k_list 1,5,10,50   --batch_img 64   --batch_txt 128   --bf16   --save_csv_baseline workspace/v1/metrics_coco_valmini_baseline.csv   --save_csv_elip workspace/v1/metrics_coco_valmini_elip.csv
+>> Avaliando baseline
+Baseline imagens: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:02<00:00,  3.34it/s]
+Baseline textos: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 49.78it/s]
+{'Baseline R@1': 0.104, 'Baseline R@5': 0.226, 'Baseline R@10': 0.322, 'Baseline R@50': 0.626}
+{'Baseline mAP': 0.1754}
+>> Avaliando ELIP-S
+ELIP textos: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 83.46it/s]
+ELIP t->i: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 500/500 [17:48<00:00,  2.14s/it]
+{'ELIP R@1': 0.002, 'ELIP R@5': 0.006, 'ELIP R@10': 0.014, 'ELIP R@50': 0.104}
+{'ELIP mAP': 0.0118}
+(main) root@C.27566524:/$ python workspace/v1/prepare_coco_val_as_train.py --root workspace/v1 --repo lmms-lab/COCO-Caption --split val --max_samples 40000 --seed 3407
+ --val_ratio 0.1
+
+
+Treino Época 25: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 2250/2250 [00:28<00:00, 77.79it/s, loss=0.139]
+>> Avaliando no conjunto de validação...
+Validação: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:02<00:00, 105.85it/s]
+>> Val Loss: 0.649237
+
+
+(main) root@C.27566524:/$ python workspace/v1/train_elip_s_siglip_vpt.py   --root workspace/v1   --data_rel data/COCOValMini   --model google/siglip-base-patch16-224   --epochs 1   --per_device_batch 8   --grad_accum 2   --lr 1e-4   --weight_decay 0.01   --warmup_steps 200   --prompt_tokens 10   --hidden_dim 2048   --out_rel ckpt_co
+co_valmini_v2   --bf16   --grad_ckpt
